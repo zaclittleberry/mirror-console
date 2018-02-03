@@ -1,0 +1,19 @@
+networks:
+  mirror_console:
+    driver: "bridge"
+version: '2'
+services:
+  ionic:
+    networks:
+      - "mirror_console"
+    container_name: "mirror-console"
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    command: bash -c "ionic serve"
+    volumes:
+      - ./:/opt/project
+      - /opt/project/node_modules # http://dchua.com/2016/02/07/getting-npm-packages-to-be-installed-with-docker-compose/
+    ports:
+      - "8100:8100"
+      - "35729:35729"
