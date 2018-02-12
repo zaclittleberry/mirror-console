@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 
+import { WundergroundService } from '../../services/wunderground.service';
+
 @IonicPage({
   name: 'HomePage',
   segment: 'home',
@@ -12,12 +14,18 @@ import { NavController } from 'ionic-angular';
 export class HomePage {
   date: string;
   time: string;
-  interval: any;
+  intervalDateTime: any;
+  intervalForecast: any;
+  intervalToggleDisplay: any;
   months: string[];
   days : string[];
+  forecast: any;
+  display: string;
+
 
   constructor(
-    public navCtrl: NavController
+    public navCtrl: NavController,
+    private weatherService: WundergroundService,
   ) {
     this.months = [
       "January",
@@ -47,7 +55,19 @@ export class HomePage {
 
   ngOnInit() {
     this.updateDateTime();
-    this.interval = setInterval(() => {this.updateDateTime()}, 15000);
+    this.intervalDateTime = setInterval(() => {this.updateDateTime()}, 15 * 1000);
+
+    this.getForecast();
+    this.intervalForecast = setInterval(() => {this.getForecast()}, 60 * 60 * 1000);
+
+    this.toggleDisplays();
+    this.intervalToggleDisplay = setInterval(() => {this.toggleDisplays()}, 15 * 1000);
+  }
+
+  ngOnDestroy() {
+    clearInterval(this.intervalDateTime);
+    clearInterval(this.intervalForecast);
+    clearInterval(this.intervalToggleDisplay);
   }
 
   updateDateTime() {
@@ -82,8 +102,14 @@ export class HomePage {
     return i;
   }
 
-  ngOnDestroy() {
-    clearInterval(this.interval);
+  getForecast() {
+    this.weatherService.getForecast().subscribe(response => {
+      this.forecast = response.forecast.simpleforecast.forecastday.filter((item, index) => index < 5 );
+    });
+  }
+
+  toggleDisplays() {
+    this.display = (this.display == 'date') ? 'weather' : 'date';
   }
 
 }

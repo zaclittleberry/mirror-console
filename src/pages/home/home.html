@@ -1,4 +1,27 @@
 <ion-content padding class="no-scroll">
-  <div class="date">{{date}}</div>
-  <div class="time">{{time}}</div>
+  <div class="datetime" *ngIf="display == 'date'">
+    <div class="date">{{date}}</div>
+    <div class="time">{{time}}</div>
+  </div>
+  <div class="weather" *ngIf="display == 'weather'">
+    <div class="day" *ngFor="let day of forecast">
+      <div class="weekday">
+        {{ day.date.weekday }}
+      </div>
+      <div class="conditions">
+        {{ day.conditions }}
+      </div>
+      <div class="temps">
+        <div class="low">
+          {{ day.low.fahrenheit }}°F
+        </div>
+        <div class="divider">
+          -
+        </div>
+        <div class="high">
+          {{ day.high.fahrenheit }}°F
+        </div>
+      </div>
+    </div>
+  </div>
 </ion-content>

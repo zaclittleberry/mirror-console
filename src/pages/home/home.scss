@@ -13,4 +13,32 @@ page-home {
   .time {
     font-size: 6rem;
   }
+
+  .weather {
+    width:100%;
+    .day {
+      width: 20%;
+      float: left;
+      .weekday {
+        font-size: 3rem;
+      }
+      .conditions {
+        font-size: 5rem;
+      }
+      .temps {
+        font-size: 2.5rem;
+        .high {
+          display: inline;
+        }
+        .divider {
+          display: inline;
+        }
+        .low {
+          display: inline;
+        }
+      }
+    }
+  }
+
+
 }
