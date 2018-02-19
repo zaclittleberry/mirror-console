@@ -17,13 +17,19 @@ page-home {
   .weather {
     width:100%;
     .day {
-      width: 20%;
+      width: 30%;
       float: left;
+      &.current {
+        width: 40%;
+      }
       .weekday {
         font-size: 3rem;
       }
+      .current-conditions {
+        font-size: 4.5rem;
+      }
       .conditions {
-        font-size: 5rem;
+        font-size: 4.5rem;
       }
       .temps {
         font-size: 2.5rem;

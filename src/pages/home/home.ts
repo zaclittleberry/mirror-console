@@ -20,6 +20,7 @@ export class HomePage {
   months: string[];
   days : string[];
   forecast: any;
+  conditions: any;
   display: string;
 
 
@@ -51,6 +52,7 @@ export class HomePage {
       "Friday",
       "Saturday",
     ];
+
   }
 
   ngOnInit() {
@@ -104,8 +106,12 @@ export class HomePage {
 
   getForecast() {
     this.weatherService.getForecast().subscribe(response => {
-      this.forecast = response.forecast.simpleforecast.forecastday.filter((item, index) => index < 5 );
+      this.forecast = response.forecast.simpleforecast.forecastday.filter((item, index) => index < 3 );
     });
+    this.weatherService.getConditions().subscribe(response => {
+      this.conditions = response;
+    });
+
   }
 
   toggleDisplays() {

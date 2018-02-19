@@ -4,12 +4,15 @@
     <div class="time">{{time}}</div>
   </div>
   <div class="weather" *ngIf="display == 'weather'">
-    <div class="day" *ngFor="let day of forecast">
+    <div class="day" *ngFor="let day of forecast; let index = index" [ngClass]="{'current': index === 0 }">
       <div class="weekday">
         {{ day.date.weekday }}
       </div>
       <div class="conditions">
         {{ day.conditions }}
+      </div>
+      <div *ngIf="index === 0" class="current-conditions">
+        {{ conditions.current_observation.temp_f}}°F
       </div>
       <div class="temps">
         <div class="low">

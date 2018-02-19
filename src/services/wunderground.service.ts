@@ -53,4 +53,10 @@ export class WundergroundService {
     return this.http.get(url.href).map(res => res.json());
   }
 
+  getConditions() {
+    let url = this.getEndpoint('conditions');
+    url = this.setParams(url);
+    return this.http.get(url.href).map(res => res.json());
+  }
+
 }
