@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 
-import { WundergroundService } from '../../services/wunderground.service';
+// import { WundergroundService } from '../../services/wunderground.service';
+import { OpenweathermapService } from '../../services/openweathermap.service';
 
 @IonicPage({
   name: 'HomePage',
@@ -19,15 +20,20 @@ export class HomePage {
   intervalToggleDisplay: any;
   months: string[];
   days : string[];
-  forecast: any;
+  // forecast: any;
+  forecastObject: any;
+  forecastArray: any;
   conditions: any;
   display: string;
 
 
   constructor(
     public navCtrl: NavController,
-    private weatherService: WundergroundService,
+    // private weatherService: WundergroundService,
+    private weatherService: OpenweathermapService,
   ) {
+    this.forecastObject = {};
+    this.forecastArray = [];
     this.months = [
       "January",
       "February",
@@ -106,12 +112,45 @@ export class HomePage {
 
   getForecast() {
     this.weatherService.getForecast().subscribe(response => {
-      this.forecast = response.forecast.simpleforecast.forecastday.filter((item, index) => index < 3 );
+      for (let item of response.list) {
+        this.buildForecastObject(item);
+      }
+      this.forecastArray = this.forecastArray.filter((item, index) => index < 3 );
     });
     this.weatherService.getConditions().subscribe(response => {
+      let date = new Date(response.dt)
       this.conditions = response;
     });
 
+  }
+
+  buildForecastObject(item) {
+    let day = this.dateTimeGetDay(item.dt*1000);
+    if (!this.forecastObject.hasOwnProperty(day)) {
+      this.forecastArray.push(day);
+      this.forecastObject[day] = {
+        day: day,
+        low: Math.round(item.main.temp),
+        high: Math.round(item.main.temp),
+        conditions: [],
+      };
+    }
+    if (item.main.temp < this.forecastObject[day].low) {
+      this.forecastObject[day].low = Math.round(item.main.temp);
+    } else if (item.main.temp > this.forecastObject[day].high) {
+      this.forecastObject[day].high = Math.round(item.main.temp);
+    }
+    let conditions = this.forecastObject[day].conditions;
+    let lastCondition = conditions[conditions.length-1];
+    let currentCondition = item.weather[0].main;
+    if (currentCondition !== lastCondition) {
+      this.forecastObject[day].conditions.push(item.weather[0].main);
+    }
+  }
+
+  dateTimeGetDay(datetime) {
+    let date = new Date(datetime);
+    return this.days[date.getDay()];
   }
 
   toggleDisplays() {

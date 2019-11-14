@@ -7,7 +7,8 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { MyApp } from './app.component';
 import { HttpModule } from '@angular/http';
 
-import { WundergroundService } from '../services/wunderground.service';
+// import { WundergroundService } from '../services/wunderground.service';
+import { OpenweathermapService } from '../services/openweathermap.service';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { WundergroundService } from '../services/wunderground.service';
   providers: [
     StatusBar,
     SplashScreen,
-    WundergroundService,
+    // WundergroundService,
+    OpenweathermapService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

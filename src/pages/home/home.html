@@ -4,25 +4,25 @@
     <div class="time">{{time}}</div>
   </div>
   <div class="weather" *ngIf="display == 'weather'">
-    <div class="day" *ngFor="let day of forecast; let index = index" [ngClass]="{'current': index === 0 }">
+    <div class="day" *ngFor="let day of forecastArray; let index = index" [ngClass]="{'current': index === 0 }">
       <div class="weekday">
-        {{ day.date.weekday }}
+        {{ forecastObject[day].day }}
       </div>
       <div class="conditions">
-        {{ day.conditions }}
+        {{ forecastObject[day].conditions.join(', ') }}
       </div>
       <div *ngIf="index === 0" class="current-conditions">
-        {{ conditions.current_observation.temp_f}}°F
+        {{ conditions?.main.temp }}°F
       </div>
       <div class="temps">
         <div class="low">
-          {{ day.low.fahrenheit }}°F
+          {{ forecastObject[day].low }}°F
         </div>
         <div class="divider">
           -
         </div>
         <div class="high">
-          {{ day.high.fahrenheit }}°F
+          {{ forecastObject[day].high }}°F
         </div>
       </div>
     </div>
