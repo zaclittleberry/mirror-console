@@ -1,0 +1,36 @@
+html, body {
+  height: 100%;
+  background-color: #000;
+  color: #fff;
+  font-size: 100%;
+  font-family: sans-serif;
+  margin: 0;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+.content {
+  text-align: center;
+  cursor: none;
+}
+
+.date {
+  font-size: 3rem;
+}
+
+.time {
+  font-size: 6rem;
+}
+
+.weather {
+  width:100%;
+}
+  weather-day {
+    width: 30%;
+    float: left;
+  }
+  weather-day[current-temp] {
+    width: 40%;
+  }

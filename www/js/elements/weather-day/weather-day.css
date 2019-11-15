@@ -1,0 +1,21 @@
+.weather-day .weekday {
+  font-size: 3rem;
+}
+.weather-day .current-temp {
+  font-size: 4.5rem;
+}
+.weather-day .conditions {
+  font-size: 4.5rem;
+}
+.weather-day .temps {
+  font-size: 2.5rem;
+}
+  .weather-day .temps .high {
+    display: inline;
+  }
+  .weather-day .temps .divider {
+    display: inline;
+  }
+  .weather-day .temps .low {
+    display: inline;
+  }
