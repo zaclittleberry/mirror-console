@@ -1,5 +1,5 @@
-import { WeatherDay } from './elements/weather-day/weather-day.js';
-import { OpenweathermapService } from './services/openweathermap.service.js';
+const WeatherDay = await import('./elements/weather-day/weather-day.js');
+const OpenweathermapService = await import('./services/openweathermap.service.js');
 
 const weatherService = new OpenweathermapService();
 
