@@ -1,39 +1,36 @@
-const WeatherDay = await import('./elements/weather-day/weather-day.js');
-const OpenweathermapService = await import('./services/openweathermap.service.js');
-
 const weatherService = new OpenweathermapService();
 
 class HomePage {
-  days = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
-
-  months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-
-  forecastArray = [];
-  forecastObject = {};
-  display = '';
-
   constructor () {
+    this.days = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
+
+    this.months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+
+    this.forecastArray = [];
+    this.forecastObject = {};
+    this.display = '';
+
     this.loadAndRenderDateAndTime();
     this.intervalDateTime = setInterval(() => {this.loadAndRenderDateAndTime();}, 15 * 1000);
 

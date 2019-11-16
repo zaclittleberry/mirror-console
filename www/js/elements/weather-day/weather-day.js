@@ -1,4 +1,4 @@
-export class WeatherDay extends HTMLElement {
+class WeatherDay extends HTMLElement {
   /*
     <div class="weekday">
       ${this.getAttribute('day')}
