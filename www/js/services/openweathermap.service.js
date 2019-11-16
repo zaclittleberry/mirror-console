@@ -1,5 +1,4 @@
-import { WEATHER_API_KEY, WEATHER_ZIP } from '../constants.js';
-export class OpenweathermapService {
+class OpenweathermapService {
 
   constructor() {
     this.apiUrl = new URL('https://api.openweathermap.org/data/2.5');
