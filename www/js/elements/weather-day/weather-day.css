@@ -18,6 +18,8 @@
   top: 0;
   width: 0;
   height: 0;
+  /* arrow is 12px tall, so to center to tip, adjust up half the height*/
+  margin-top: -6px;
   border-top: 6px solid transparent;
   border-bottom: 6px solid transparent;
   border-left: 6px solid white;
