@@ -12,28 +12,30 @@
       <div class="time">Time</div>
     </div>
     <div id="weather">
-      <weather-day
-        day="Thursday"
-        conditions="Clouds, Snow, Clear"
-        current-temp="24"
-        low-temp="21"
-        high-temp="27"
-      ></weather-day>
+      <div id="weather-day-container">
+        <weather-day
+          day="Monday"
+          conditions="Clouds, Snow, Clear"
+          time-position="25"
+          current-temp="50"
+          low-temp="0"
+          high-temp="100"
+        ></weather-day>
 
-      <weather-day
-        day="Thursday"
-        conditions="Clouds, Snow, Clear"
-        low-temp="21"
-        high-temp="27"
-      ></weather-day>
+        <weather-day
+          day="Tuesday"
+          conditions="Clouds, Snow, Clear"
+          low-temp="0"
+          high-temp="100"
+        ></weather-day>
 
-      <weather-day
-        day="Thursday"
-        conditions="Clouds, Snow, Clear"
-        low-temp="21"
-        high-temp="27"
-      ></weather-day>
-
+        <weather-day
+          day="Wednesday"
+          conditions="Clouds, Snow, Clear"
+          low-temp="0"
+          high-temp="100"
+        ></weather-day>
+      </div>
     </div>
   </div>
 <script src="js/constants.js"></script>

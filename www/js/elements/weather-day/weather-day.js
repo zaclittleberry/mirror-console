@@ -60,9 +60,9 @@ class WeatherDay extends HTMLElement {
     temps.appendChild(high);
 
     wrapper.appendChild(day);
-    wrapper.appendChild(conditions);
     wrapper.append(currentTemp);
     wrapper.append(temps);
+    wrapper.appendChild(conditions);
 
     const linkElem = document.createElement('link');
     linkElem.setAttribute('rel', 'stylesheet');
@@ -74,21 +74,27 @@ class WeatherDay extends HTMLElement {
 
   connectedCallback() {
     let shadow = this.shadowRoot;
-    // shadow.querySelector('.weekday').textContent = `${this.getAttribute('day')}`;
+    shadow.querySelector('.weekday').textContent = `${this.getAttribute('day')}`;
     let conditions = this.getAttribute('conditions').split(';');
-    console.log('conditions', conditions);
 
     for (let c = 0; c < conditions.length; c++) {
       let condition = conditions[c];
       let span = document.createElement('span');
       span.textContent = condition;
-      console.log('condition:', condition);
       shadow.querySelector('.conditions').append(span);
-      console.log('compare', c, conditions.length-1);
       if (c !== conditions.length-1) {
         let br = document.createElement('br');
         shadow.querySelector('.conditions').append(br);
       }
+    }
+
+    if (this.hasAttribute('time-position')) {
+      console.log('time-position found');
+      let timePos = document.createElement('span');
+      timePos.textContent = "";
+      timePos.setAttribute('class', 'time-position');
+      timePos.style.top = `${this.getAttribute('time-position')}%`;
+      shadow.querySelector('.conditions').append(timePos);
     }
 
     if (this.hasAttribute('current-temp')) {

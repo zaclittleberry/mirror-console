@@ -34,7 +34,9 @@ class HomePage {
     this.display = '';
 
     this.loadAndRenderDateAndTime();
-    this.intervalDateTime = setInterval(() => {this.loadAndRenderDateAndTime();}, 15 * 1000);
+    this.intervalDateTime = setInterval(() => {
+      this.loadAndRenderDateAndTime();
+    }, 15 * 1000);
 
     this.loadAndRenderForecast();
     this.intervalForecast = setInterval(() => {this.loadAndRenderForecast();}, 60 * 60 * 1000);
@@ -45,25 +47,20 @@ class HomePage {
 
   async loadAndRenderForecast() {
     let weather = await weatherService.getWeather();
-
     let currentWeather = weather.current_condition[0];
-    console.log(currentWeather);
-
     let forecasts = weather.weather;
-    console.log(forecasts);
 
     // Clear forecast properties to rebuild them
     this.forecastArray = [];
     this.forecastObject = {};
     for (let item of forecasts) {
-      console.log(item);
       this.buildForecastObject(item);
     }
 
     this.forecastObject[this.forecastArray[0]].currentTemp = Math.round(currentWeather.temp_F);
 
     // Render
-    let weatherElement = document.querySelector('#weather');
+    let weatherElement = document.querySelector('#weather-day-container');
     while (weatherElement.lastChild) {
       weatherElement.removeChild(weatherElement.lastChild);
     }
@@ -74,13 +71,14 @@ class HomePage {
       weatherDayElement.setAttribute('conditions', weatherDay.conditions.join(';'));
       if (this.forecastObject[day].hasOwnProperty('currentTemp')) {
         weatherDayElement.setAttribute('current-temp', weatherDay.currentTemp);
+        let position = this.getTimePosition();
+        weatherDayElement.setAttribute('time-position', position);
       }
       weatherDayElement.setAttribute('low-temp', weatherDay.low);
       weatherDayElement.setAttribute('high-temp', weatherDay.high);
 
       weatherElement.appendChild(weatherDayElement);
     }
-
   }
 
   loadAndRenderDateAndTime() {
@@ -109,7 +107,6 @@ class HomePage {
   }
 
   formatTime(h, m = undefined) {
-    console.log(typeof h, h);
     let ampm = (h < 12) ? 'am' : 'pm';
     h = h % 12; // 12 hour format
     h = (h || 12); // set h to 12 if 0
@@ -131,11 +128,9 @@ class HomePage {
   }
 
   buildForecastObject(item) {
-    console.log(item.date);
     let date = item.date.replace(/-/g, '/');
     const dateUnix = Date.parse(date);
     let day = this.dateTimeGetDay(dateUnix);
-    console.log(day);
     if (!this.forecastObject.hasOwnProperty(day)) {
       this.forecastArray.push(day);
       this.forecastObject[day] = {
@@ -158,6 +153,29 @@ class HomePage {
 
     }
 
+  }
+
+  getTimePosition() {
+    let today = new Date();
+    let h = today.getHours();
+    h = h * 100;
+    let m = today.getMinutes();
+    // convert m to 0-100
+    m = m * (1.0/60);
+    let mil = h + m;
+    let position;
+    if (mil >= 2250) {
+      // max position is 9pm + 10%, which is 10:30, or 2250
+      position = 100;
+    } else if (mil >= 750) {
+      // lowest position is 9am - 10%, or 7:30, which is 750
+      // difference between 750 and 2250 is 1500. each hour is 1/15th of 100%
+      position = (mil - 750) * (1.0/15);
+    } else {
+      position = 0;
+    }
+    console.log('pos', position);
+    return position;
   }
 
   dateTimeGetDay(datetime) {
