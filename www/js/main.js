@@ -1,4 +1,6 @@
-const weatherService = new OpenweathermapService();
+// const weatherService = new DarkskyService();
+// const weatherService = new NoaaService();
+const weatherService = new WttrinService();
 
 class HomePage {
   constructor () {
@@ -42,15 +44,23 @@ class HomePage {
   }
 
   async loadAndRenderForecast() {
-    let forecasts = await weatherService.getForecast();
-    let currentWeather = await weatherService.getWeather();
+    let weather = await weatherService.getWeather();
 
-    for (let item of forecasts.list) {
+    let currentWeather = weather.current_condition[0];
+    console.log(currentWeather);
+
+    let forecasts = weather.weather;
+    console.log(forecasts);
+
+    // Clear forecast properties to rebuild them
+    this.forecastArray = [];
+    this.forecastObject = {};
+    for (let item of forecasts) {
+      console.log(item);
       this.buildForecastObject(item);
     }
-    this.forecastArray = this.forecastArray.filter((item, index) => index < 3 );
 
-    this.forecastObject[this.forecastArray[0]].currentTemp = Math.round(currentWeather.main.temp);
+    this.forecastObject[this.forecastArray[0]].currentTemp = Math.round(currentWeather.temp_F);
 
     // Render
     let weatherElement = document.querySelector('#weather');
@@ -61,7 +71,7 @@ class HomePage {
       let weatherDay = this.forecastObject[day];
       let weatherDayElement = document.createElement("weather-day");
       weatherDayElement.setAttribute('day', weatherDay.day);
-      weatherDayElement.setAttribute('conditions', weatherDay.conditions.join(', '));
+      weatherDayElement.setAttribute('conditions', weatherDay.conditions.join(';'));
       if (this.forecastObject[day].hasOwnProperty('currentTemp')) {
         weatherDayElement.setAttribute('current-temp', weatherDay.currentTemp);
       }
@@ -89,19 +99,28 @@ class HomePage {
     const dateText = day + ', ' + month + ' ' + dd + ', ' + yyyy;
 
     let h = today.getHours();
-    let ampm = (h < 12) ? 'am' : 'pm';
-    h = h % 12; // 12 hour format
-    h = (h || 12); // set h to 12 if 0
     let m = today.getMinutes();
-    // add a zero in front of numbers<10
-    m = this.zeroPad(m);
-
-    const timeText = h + ":" + m + ampm;
+    let timeText = this.formatTime(h, m)
 
     // Set Date Element Text
     document.querySelector('#datetime .date').innerText = dateText;
     // Set Time Element Text
     document.querySelector('#datetime .time').innerText = timeText;
+  }
+
+  formatTime(h, m = undefined) {
+    console.log(typeof h, h);
+    let ampm = (h < 12) ? 'am' : 'pm';
+    h = h % 12; // 12 hour format
+    h = (h || 12); // set h to 12 if 0
+    // add a zero in front of numbers<10
+
+    if (m!== undefined) {
+      m = this.zeroPad(m);
+      return h + ":" + m + ampm;
+    } else {
+      return h + ampm;
+    }
   }
 
   zeroPad(i) {
@@ -112,27 +131,33 @@ class HomePage {
   }
 
   buildForecastObject(item) {
-    let day = this.dateTimeGetDay(item.dt*1000);
+    console.log(item.date);
+    let date = item.date.replace(/-/g, '/');
+    const dateUnix = Date.parse(date);
+    let day = this.dateTimeGetDay(dateUnix);
+    console.log(day);
     if (!this.forecastObject.hasOwnProperty(day)) {
       this.forecastArray.push(day);
       this.forecastObject[day] = {
         day: day,
-        low: Math.round(item.main.temp),
-        high: Math.round(item.main.temp),
+        low: item.mintempF,
+        high: item.maxtempF,
         conditions: [],
       };
     }
-    if (item.main.temp < this.forecastObject[day].low) {
-      this.forecastObject[day].low = Math.round(item.main.temp);
-    } else if (item.main.temp > this.forecastObject[day].high) {
-      this.forecastObject[day].high = Math.round(item.main.temp);
+    //  item.hourly[3-6].weatherDesc[0].value
+    for (let i = 3; i<=7; i++) {
+      let conditions = this.forecastObject[day].conditions;
+      // let lastCondition = conditions[conditions.length-1];
+      let hourly = item.hourly[i];
+      let currentCondition = hourly.weatherDesc[0].value;
+      // time is in military format: eg 600. multiply by .01 for 1-24 houra
+      let hourlyTime = parseFloat(hourly.time) * .01;
+      let currentTime = this.formatTime(hourlyTime);
+      this.forecastObject[day].conditions.push(`${currentTime}: ${currentCondition}`);
+
     }
-    let conditions = this.forecastObject[day].conditions;
-    let lastCondition = conditions[conditions.length-1];
-    let currentCondition = item.weather[0].main;
-    if (currentCondition !== lastCondition) {
-      this.forecastObject[day].conditions.push(item.weather[0].main);
-    }
+
   }
 
   dateTimeGetDay(datetime) {

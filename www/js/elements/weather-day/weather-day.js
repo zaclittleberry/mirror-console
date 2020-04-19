@@ -74,8 +74,23 @@ class WeatherDay extends HTMLElement {
 
   connectedCallback() {
     let shadow = this.shadowRoot;
-    shadow.querySelector('.weekday').textContent = `${this.getAttribute('day')}`;
-    shadow.querySelector('.conditions').textContent = `${this.getAttribute('conditions')}`;
+    // shadow.querySelector('.weekday').textContent = `${this.getAttribute('day')}`;
+    let conditions = this.getAttribute('conditions').split(';');
+    console.log('conditions', conditions);
+
+    for (let c = 0; c < conditions.length; c++) {
+      let condition = conditions[c];
+      let span = document.createElement('span');
+      span.textContent = condition;
+      console.log('condition:', condition);
+      shadow.querySelector('.conditions').append(span);
+      console.log('compare', c, conditions.length-1);
+      if (c !== conditions.length-1) {
+        let br = document.createElement('br');
+        shadow.querySelector('.conditions').append(br);
+      }
+    }
+
     if (this.hasAttribute('current-temp')) {
       shadow.querySelector('.current-temp').textContent = `${this.getAttribute('current-temp')}°F`;
     } else {
